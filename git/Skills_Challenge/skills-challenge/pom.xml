@@ -4,4 +4,14 @@
   <artifactId>skills-challenge</artifactId>
   <version>0.0.1-SNAPSHOT</version>
   <name>Skills_Challenge</name>
+  
+  <dependencies>
+  	<!-- https://mvnrepository.com/artifact/commons-net/commons-net -->
+	<dependency>
+	    <groupId>commons-net</groupId>
+	    <artifactId>commons-net</artifactId>
+	    <version>3.6</version>
+	</dependency>
+
+  </dependencies>
 </project>
