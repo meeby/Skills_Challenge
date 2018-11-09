@@ -9,20 +9,17 @@ import java.util.stream.IntStream;
 
 import org.apache.commons.net.ftp.FTP;
 import org.apache.commons.net.ftp.FTPClient;
-import org.apache.commons.net.ftp.FTPClientConfig;
-import org.apache.commons.net.ftp.FTPFile;
 import org.apache.commons.net.ftp.FTPReply;
 
-public class FTPConnection {
+public class FTPDownloader {
 
-	public FTPConnection() {
-		this.ftpConnect();
+	public boolean getFTPData() {
+		return ftpDownload();
 	}
 
-	private boolean ftpConnect() {
+	private boolean ftpDownload() {
 		FTPClient ftpClient = new FTPClient();
 
-		boolean error = false;
 		try {
 			int reply;
 			String server = "ftp.ncdc.noaa.gov";
@@ -50,20 +47,14 @@ public class FTPConnection {
 	        	fileNames[i] = yearRange[i]+"/"+dfwAirport+"-"+yearRange[i]+".gz";
 	        }
 	        String workingDir = System.getProperty("user.dir");
-//	        String fileLocation = workingDir+"/gzips";
-//	        File testFile = new File(fileLocation);
-	        System.out.println(workingDir);
-//	        System.out.println(testFile.exists());
 	        
 	        for(String filename : fileNames) {
-	        	System.out.println(filename);
 	        	String fileLocation = workingDir+"/gzips/";
 	        	File localFile = new File(fileLocation+filename);
-	        	System.out.println(localFile.getAbsolutePath());
+	        	
 	        	localFile.getParentFile().mkdirs();
 	        	OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(localFile));
 	        	boolean copied = ftpClient.retrieveFile("/pub/data/noaa/isd-lite/"+filename, outputStream);
-	        	System.out.println(ftpClient.getReplyString());
 	        	
 	        	if(copied) {
 	        		System.out.println(filename+" copied");
@@ -75,7 +66,6 @@ public class FTPConnection {
 	        }
 
 		} catch (IOException e) {
-			error = true;
 			e.printStackTrace();
 		} catch (Exception e){
 			e.printStackTrace();
@@ -85,10 +75,9 @@ public class FTPConnection {
 					ftpClient.logout();
 					ftpClient.disconnect();
 				} catch (IOException ioe) {
-					// do nothing
+					System.out.println("Could not disconnect!");
 				}
 			}
-			System.exit(error ? 1 : 0);
 		}
 		
 		return true;

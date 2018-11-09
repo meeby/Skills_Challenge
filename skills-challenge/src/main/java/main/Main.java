@@ -3,7 +3,13 @@ package main;
 public class Main {
 
 	public static void main(String[] args) {
-		FTPConnection ftpConn = new FTPConnection();
+		FTPDownloader dataDownloader = new FTPDownloader();
+		boolean downloaded = dataDownloader.getFTPData();
+		
+		if(downloaded) {
+			Unzipper unzipper = new Unzipper();
+			unzipper.unzip();
+		}
 	}
 
 }
