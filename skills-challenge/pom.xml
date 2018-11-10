@@ -12,6 +12,16 @@
 	    <artifactId>commons-net</artifactId>
 	    <version>3.6</version>
 	</dependency>
-
+	
+	<dependency>
+	    <groupId>tech.tablesaw</groupId>
+	    <artifactId>tablesaw-core</artifactId>
+	    <version>0.25.2</version>
+	</dependency>
+	<dependency>
+	    <groupId>tech.tablesaw</groupId>
+	    <artifactId>tablesaw-jsplot</artifactId>
+	    <version>0.25.2</version>
+	</dependency>
   </dependencies>
 </project>

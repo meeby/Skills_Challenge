@@ -4,7 +4,6 @@ import java.io.BufferedOutputStream;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.OutputStream;
 import java.util.stream.IntStream;
 
 import org.apache.commons.net.ftp.FTP;
@@ -53,7 +52,7 @@ public class FTPDownloader {
 	        	File localFile = new File(fileLocation+filename);
 	        	
 	        	localFile.getParentFile().mkdirs();
-	        	OutputStream outputStream = new BufferedOutputStream(new FileOutputStream(localFile));
+	        	BufferedOutputStream outputStream = new BufferedOutputStream(new FileOutputStream(localFile));
 	        	boolean copied = ftpClient.retrieveFile("/pub/data/noaa/isd-lite/"+filename, outputStream);
 	        	
 	        	if(copied) {
