@@ -1,3 +1,9 @@
+/**
+ * Converts the .gz files downloaded by FTPDownloader.
+ * 
+ * @author Mark Eby
+ */
+
 package main;
 
 import java.io.BufferedReader;
@@ -17,9 +23,13 @@ public class CSVConverter {
 	private String currentPath;
 	private FilenameFilter gzipFilter;
 	
+	/**
+	 * Constructor for the class.
+	 * Initializes the current working directory and the filter for .gz files
+	 */
 	public CSVConverter() {
 		this.currentPath = System.getProperty("user.dir");
-		gzipFilter = new FilenameFilter() {
+		this.gzipFilter = new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String name) {
@@ -38,6 +48,11 @@ public class CSVConverter {
 		};
 	}
 	
+	/**
+	 * Unzips the .gz files and uses the getCSVLine to convert from plain text to CSV
+	 * 
+	 * @return If the conversion finished successfully.
+	 */
 	public boolean convertToCSV() {
 		File mainFolder = new File(this.currentPath + "/" + this.zipPath);
 		File[] folderList = mainFolder.listFiles();
@@ -48,12 +63,15 @@ public class CSVConverter {
 		if(folderList != null) {
 			for(File folder : folderList) {
 				if(folder.isDirectory()) {
+					// Gets all the GZip files found in the current working directory
 					File[] gzipsList = folder.listFiles(this.gzipFilter);
 					
 					String year = folder.getName();
 					
 //					System.out.print("Unzipping " + year + "...");
 					
+					// Iterates through each GZip file to uncompress the files and convert the text 
+					// within to CSV format.
 					for(File gzip : gzipsList) {
 						try {
 							GZIPInputStream gzipInput = new GZIPInputStream(new FileInputStream(gzip));
@@ -66,6 +84,8 @@ public class CSVConverter {
 							
 							outputFileStream.write(getCSVHeaders().getBytes());
 							
+							// Reads in each line and calls getCSVLine to convert the line to CSV 
+							// format.
 							String line = buffered.readLine();
 							while(line != null) {
 								String csvLine = getCSVLine(line);
@@ -97,6 +117,11 @@ public class CSVConverter {
 		return false;
 	}
 	
+	/**
+	 * Generates the string for the headers of the CSV file.
+	 * 
+	 * @return String containing the headers of the CSV file.
+	 */
 	private String getCSVHeaders() {
 		String headers = "";
 		
@@ -116,6 +141,13 @@ public class CSVConverter {
 		return headers;
 	}
 	
+	/**
+	 * Converts the plain text line from the data into a string to be saved onto the CSV file.
+	 * Follows the format specified in the documentation.
+	 * 
+	 * @param line The plain text line to be converted.
+	 * @return String containing the CSV formatted contents of "line".
+	 */
 	private String getCSVLine(String line) {
 		int dataYear = Integer.parseInt(line.substring(0, 4).trim());
 		int dataMonth = Integer.parseInt(line.substring(5, 7).trim());

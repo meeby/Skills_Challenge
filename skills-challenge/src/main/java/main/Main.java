@@ -1,3 +1,10 @@
+/**
+ * Runs the main process to generate a scatter plot with weather data.
+ * Uses the FTPDownloader, CSVConverter, and DataCompiler classes.
+ * 
+ * @author: Mark Eby
+ */
+
 package main;
 
 import tech.tablesaw.aggregate.NumericAggregateFunction;
@@ -26,9 +33,9 @@ public class Main {
 				if(weatherData != null) {
 					System.out.println("Done compiling.");
 					NumericAggregateFunction mean = getMeanFunction();
+					//Generates the table with only the average Air Temperature data by month in each year 
 					Table avgAirTemp = weatherData.summarize("Air Temperature", mean).by("Year", "Month");
-					
-					System.out.println(avgAirTemp.printAll());
+					//Generates the scatter plot to show the data from the above table
 					Plot.show(ScatterPlot.create("Average Temperature by Month of Each Year", avgAirTemp, "Month", "[Air Temperature]", "Year"));
 				}
 				else {
@@ -44,6 +51,7 @@ public class Main {
 		}
 	}
 
+	// Helper method used to get the aggregate function for the mean of the column in the table
 	private static NumericAggregateFunction getMeanFunction() {
 		return new NumericAggregateFunction("") {
 

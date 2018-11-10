@@ -1,3 +1,9 @@
+/**
+ * Compiles the data from the CSV files into a Tablesaw table
+ * 
+ * @author Mark Eby
+ */
+
 package main;
 
 import java.io.File;
@@ -13,16 +19,20 @@ import tech.tablesaw.io.csv.CsvReadOptions;
 public class DataCompiler {
 	private String currentPath;
 	private String filesLocation = "/files";
-	private FilenameFilter txtFilter;
+	private FilenameFilter csvFilter;
 	private Table weatherData;
 	
 	private final ColumnType STRING = ColumnType.STRING;
 	private final ColumnType DOUBLE = ColumnType.DOUBLE;
 	private final ColumnType SKIP = ColumnType.SKIP;
 	
+	/**
+	 * Constructor for the class.
+	 * Initializes the current working directory and the CSV file filter.
+	 */
 	public DataCompiler() {
 		this.currentPath = System.getProperty("user.dir");
-		txtFilter = new FilenameFilter() {
+		this.csvFilter = new FilenameFilter() {
 
 			@Override
 			public boolean accept(File dir, String name) {
@@ -41,13 +51,20 @@ public class DataCompiler {
 		};
 	}
 	
+	/**
+	 * Goes through the individual CSV files and appends them to the Tablesaw Table
+	 * 
+	 * @return A Tablesaw table containing all the data found
+	 */
 	public Table compileData() {
 		File parentFolder = new File(this.currentPath + this.filesLocation);
 		
 		
-		File[] txtFiles = parentFolder.listFiles(txtFilter);
+		File[] txtFiles = parentFolder.listFiles(this.csvFilter);
 		Arrays.sort(txtFiles);
 		
+		// First file must be process separately because this is the easiest to do 
+		// when using Tablesaw to read the CSV file.
 		File firstFile = txtFiles[0];
 		this.weatherData = readCSV(firstFile);
 		
@@ -57,8 +74,13 @@ public class DataCompiler {
 		return this.weatherData;
 	}
 	
+	/**
+	 * Used to generate the Tablesaw table from the CSV file contents.
+	 * 
+	 * @param csvFile The File object representation of the CSV file to be read.
+	 * @return Tablesaw table containing the Date, Time, and Air Temperature data
+	 */
 	private Table readCSV(File csvFile) {
-		
 		ColumnType[] types = {DOUBLE, DOUBLE, DOUBLE, STRING, DOUBLE, SKIP, SKIP, SKIP, SKIP, SKIP, SKIP, SKIP};
 		
 		try {
